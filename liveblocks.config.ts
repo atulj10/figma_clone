@@ -1,20 +1,21 @@
 import { LiveMap, createClient } from "@liveblocks/client";
 import { createRoomContext, createLiveblocksContext } from "@liveblocks/react";
-  
+import { ReactionEvent } from "./types/type";
+
 const client = createClient({
   publicApiKey: process.env.NEXT_PUBLIC_LIVEBLOCKS_PUBLIC_KEY!,
-  
+
   async resolveUsers({ userIds }) {
     // Used only for Comments and Notifications. Return a list of user information
     // retrieved from `userIds`. This info is used in comments, mentions etc.
-    
+
     // const usersData = await __fetchUsersFromDB__(userIds);
     // 
     // return usersData.map((userData) => ({
     //   name: userData.name,
     //   avatar: userData.avatar.src,
     // }));
-    
+
     return [];
   },
   async resolveMentionSuggestions({ text }) {
@@ -34,14 +35,14 @@ const client = createClient({
   async resolveRoomsInfo({ roomIds }) {
     // Used only for Comments and Notifications. Return a list of room information
     // retrieved from `roomIds`.
-    
+
     // const roomsData = await __fetchRoomsFromDB__(roomIds);
     // 
     // return roomsData.map((roomData) => ({
     //   name: roomData.name,
     //   url: roomData.url,
     // }));
-    
+
     return [];
   },
 });
@@ -49,9 +50,9 @@ const client = createClient({
 // Presence represents the properties that exist on every user in the Room
 // and that will automatically be kept in sync. Accessible through the
 // `user.presence` property. Must be JSON-serializable.
-type Presence = {
-  // cursor: { x: number, y: number } | null,
-  // ...
+export type Presence = {
+  cursor: { x: number, y: number } | null,
+  message: string | null;
 };
 
 // Optionally, Storage represents the shared document that persists in the
@@ -61,7 +62,7 @@ type Presence = {
 type Storage = {
   // author: LiveObject<{ firstName: string, lastName: string }>,
   // ...
-  canvasObjects:LiveMap<string,any>;
+  canvasObjects: LiveMap<string, any>;
 };
 
 // Optionally, UserMeta represents static/readonly metadata on each user, as
@@ -74,10 +75,7 @@ type UserMeta = {
 
 // Optionally, the type of custom events broadcast and listened to in this
 // room. Use a union for multiple events. Must be JSON-serializable.
-type RoomEvent = {
-  // type: "NOTIFICATION",
-  // ...
-};
+type RoomEvent = ReactionEvent;
 
 // Optionally, when using Comments, ThreadMetadata represents metadata on
 // each thread. Can only contain booleans, strings, and numbers.
@@ -128,7 +126,7 @@ export const {
     useMarkThreadAsRead,
     useRoomNotificationSettings,
     useUpdateRoomNotificationSettings,
-  
+
     // These hooks can be exported from either context
     // useUser,
     // useRoomInfo
@@ -143,7 +141,7 @@ export const {
     useMarkAllInboxNotificationsAsRead,
     useInboxNotifications,
     useUnreadInboxNotificationsCount,
-  
+
     // These hooks can be exported from either context
     useUser,
     useRoomInfo,
